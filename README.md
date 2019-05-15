@@ -4,7 +4,7 @@
 
 # Overview
 
-![Circle Card](./assets/screenshot.png)
+![Circle Card](https://docs.microsoft.com/en-us/power-bi/developer/media/custom-visual-develop-tutorial/circle-developer-visual.png)
 
 This repository represents a simple way to use Power BI Custom Visuals Tools. Circle Card shows singular value inside a circle. It supports basic visual settings (color and circle thickness) and adaptability to viewport size.
 
