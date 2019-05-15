@@ -1,4 +1,4 @@
-# Circle Card
+# Circle Card Custom Visual
 
 ![Circle Card](https://docs.microsoft.com/en-us/power-bi/developer/media/custom-visual-develop-tutorial/circle-developer-visual.png)
 
