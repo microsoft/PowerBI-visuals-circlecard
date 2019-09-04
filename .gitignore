@@ -328,3 +328,7 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
+
+# webpack stats
+webpack.statistics.dev.html
+webpack.statistics.prod.html
