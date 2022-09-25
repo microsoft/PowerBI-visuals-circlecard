@@ -12,8 +12,9 @@
     "less-loader": "5.0.0",
     "style-loader": "0.23.1",
     "tslint-microsoft-contrib": "6.2.0",
-    "powerbi-visuals-api": "2.6.1",
-    "tslint": "5.18.0"
+    "powerbi-visuals-api": "5.0.0",
+    "tslint": "5.18.0",
+    "powerbi-visuals-utils-formattingmodel": "5.0.0"
   },
   "scripts": {
     "postinstall": "npm run cert",

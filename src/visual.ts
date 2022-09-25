@@ -28,14 +28,13 @@
 import "core-js/stable";
 import "../style/visual.less";
 import powerbi from "powerbi-visuals-api";
+import { formattingSettings, FormattingSettingsService } from "powerbi-visuals-utils-formattingmodel";
 import IVisual = powerbi.extensibility.IVisual;
 import VisualConstructorOptions = powerbi.extensibility.visual.VisualConstructorOptions;
 import VisualUpdateOptions = powerbi.extensibility.visual.VisualUpdateOptions;
 import IVisualHost = powerbi.extensibility.visual.IVisualHost;
 import DataView = powerbi.DataView;
-import EnumerateVisualObjectInstancesOptions = powerbi.EnumerateVisualObjectInstancesOptions;
-import VisualObjectInstanceEnumeration = powerbi.VisualObjectInstanceEnumeration;
-import { VisualSettings } from "./settings";
+import { VisualSettingsModel } from "./settings";
 
 import * as d3 from "d3";
 
@@ -49,9 +48,16 @@ export class Visual implements IVisual {
     private textValue: Selection<SVGElement>;
     private textLabel: Selection<SVGElement>;
 
-    private visualSettings: VisualSettings;
+    private visualSettings: VisualSettingsModel;
+    private formattingSettingsService: FormattingSettingsService;
 
     constructor(options: VisualConstructorOptions) {
+        this.host = options.host;
+        this.visualSettings = new VisualSettingsModel()
+
+        const localizationManager = this.host.createLocalizationManager();
+        this.formattingSettingsService = new FormattingSettingsService(localizationManager);
+
         this.svg = d3.select(options.element)
             .append('svg')
             .classed('circleCard', true);
@@ -66,13 +72,11 @@ export class Visual implements IVisual {
     }
 
     public update(options: VisualUpdateOptions) {
-        //this.settings = Visual.parseSettings(options && options.dataViews && options.dataViews[0]);
-
         let dataView: DataView = options.dataViews[0];
 
-        this.visualSettings = VisualSettings.parse<VisualSettings>(dataView);
-        this.visualSettings.circle.circleThickness = Math.max(0, this.visualSettings.circle.circleThickness);
-        this.visualSettings.circle.circleThickness = Math.min(10, this.visualSettings.circle.circleThickness);
+        this.visualSettings = this.formattingSettingsService.populateFormattingSettingsModel(VisualSettingsModel, options.dataViews);
+        this.visualSettings.circle.circleThickness.value = Math.max(0, this.visualSettings.circle.circleThickness.value);
+        this.visualSettings.circle.circleThickness.value = Math.min(10, this.visualSettings.circle.circleThickness.value);
 
 
         let width: number = options.viewport.width;
@@ -81,14 +85,15 @@ export class Visual implements IVisual {
         this.svg.attr("height", height);
         let radius: number = Math.min(width, height) / 2.2;
         this.circle
-            .style("fill", this.visualSettings.circle.circleColor)
+            .style("fill", this.visualSettings.circle.circleColor.value.value)
             .style("fill-opacity", 0.5)
             .style("stroke", "black")
-            .style("stroke-width", this.visualSettings.circle.circleThickness)
+            .style("stroke-width", this.visualSettings.circle.circleThickness.value)
             .attr("r", radius)
             .attr("cx", width / 2)
             .attr("cy", height / 2);
         let fontSizeValue: number = Math.min(width, height) / 5;
+        debugger
         this.textValue
             .text(<string>dataView.single.value)
             .attr("x", "50%")
@@ -106,17 +111,13 @@ export class Visual implements IVisual {
             .style("font-size", fontSizeLabel + "px");
     }
 
-    private static parseSettings(dataView: DataView): VisualSettings {
-        return <VisualSettings>VisualSettings.parse(dataView);
-    }
-
     /** 
      * This function gets called for each of the objects defined in the capabilities files and allows you to select which of the 
      * objects and properties you want to expose to the users in the property pane.
      * 
      */
-    public enumerateObjectInstances(options: EnumerateVisualObjectInstancesOptions): VisualObjectInstanceEnumeration {
-        const settings: VisualSettings = this.visualSettings || <VisualSettings>VisualSettings.getDefault();
-        return VisualSettings.enumerateObjectInstances(settings, options);
+    public getFormattingModel(): powerbi.visuals.FormattingModel {
+        debugger
+        return this.formattingSettingsService.buildFormattingModel(this.visualSettings);
     }
 }
