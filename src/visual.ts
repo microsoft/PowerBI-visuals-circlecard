@@ -28,7 +28,8 @@
 import "core-js/stable";
 import "../style/visual.less";
 import powerbi from "powerbi-visuals-api";
-import { formattingSettings, FormattingSettingsService } from "powerbi-visuals-utils-formattingmodel";
+import { FormattingSettingsService } from "powerbi-visuals-utils-formattingmodel";
+import { valueFormatter } from "powerbi-visuals-utils-formattingutils";
 import IVisual = powerbi.extensibility.IVisual;
 import VisualConstructorOptions = powerbi.extensibility.visual.VisualConstructorOptions;
 import VisualUpdateOptions = powerbi.extensibility.visual.VisualUpdateOptions;
@@ -72,15 +73,14 @@ export class Visual implements IVisual {
     }
 
     public update(options: VisualUpdateOptions) {
-        let dataView: DataView = options.dataViews[0];
+        const dataView: DataView = options.dataViews[0];
 
         this.visualSettings = this.formattingSettingsService.populateFormattingSettingsModel(VisualSettingsModel, options.dataViews);
         this.visualSettings.circle.circleThickness.value = Math.max(0, this.visualSettings.circle.circleThickness.value);
         this.visualSettings.circle.circleThickness.value = Math.min(10, this.visualSettings.circle.circleThickness.value);
 
-
-        let width: number = options.viewport.width;
-        let height: number = options.viewport.height;
+        const width: number = options.viewport.width;
+        const height: number = options.viewport.height;
         this.svg.attr("width", width);
         this.svg.attr("height", height);
         let radius: number = Math.min(width, height) / 2.2;
@@ -92,10 +92,12 @@ export class Visual implements IVisual {
             .attr("r", radius)
             .attr("cx", width / 2)
             .attr("cy", height / 2);
-        let fontSizeValue: number = Math.min(width, height) / 5;
-        debugger
+        const fontSizeValue: number = Math.min(width, height) / 5;
+
+        const { format, displayName } = dataView.metadata.columns[0]
+        const value = valueFormatter.format(dataView.single.value, format);
         this.textValue
-            .text(<string>dataView.single.value)
+            .text(<string>value)
             .attr("x", "50%")
             .attr("y", "50%")
             .attr("dy", "0.35em")
@@ -103,7 +105,7 @@ export class Visual implements IVisual {
             .style("font-size", fontSizeValue + "px");
         let fontSizeLabel: number = fontSizeValue / 4;
         this.textLabel
-            .text(dataView.metadata.columns[0].displayName)
+            .text(displayName)
             .attr("x", "50%")
             .attr("y", height / 2)
             .attr("dy", fontSizeValue / 1.2)
@@ -112,12 +114,11 @@ export class Visual implements IVisual {
     }
 
     /** 
-     * This function gets called for each of the objects defined in the capabilities files and allows you to select which of the 
+     * This function gets called on every formatting pane render. It allows you to select which of the 
      * objects and properties you want to expose to the users in the property pane.
      * 
      */
     public getFormattingModel(): powerbi.visuals.FormattingModel {
-        debugger
         return this.formattingSettingsService.buildFormattingModel(this.visualSettings);
     }
 }
