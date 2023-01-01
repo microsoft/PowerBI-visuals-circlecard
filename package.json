@@ -9,8 +9,8 @@
     "@types/d3": "5.7.2",
     "typescript": "3.6.2",
     "less": "3.10.3",
-    "less-loader": "5.0.0",
-    "style-loader": "0.23.1",
+    "less-loader": "11.1.0",
+    "style-loader": "3.3.1",
     "tslint-microsoft-contrib": "6.2.0",
     "powerbi-visuals-api": "2.6.1",
     "tslint": "5.18.0"
