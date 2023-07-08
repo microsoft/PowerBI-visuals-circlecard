@@ -8,7 +8,7 @@
   "devDependencies": {
     "@types/d3": "5.7.2",
     "typescript": "3.6.2",
-    "less": "3.10.3",
+    "less": "3.13.1",
     "less-loader": "5.0.0",
     "style-loader": "0.23.1",
     "tslint-microsoft-contrib": "6.2.0",
