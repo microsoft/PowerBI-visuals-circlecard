@@ -1,7 +1,7 @@
 {
   "name": "visual",
   "dependencies": {
-    "d3": "5.11.0",
+    "d3": "7.0.0",
     "powerbi-visuals-utils-dataviewutils": "2.2.1",
     "core-js": "3.2.1"
   },
