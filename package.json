@@ -16,12 +16,11 @@
     "tslint": "5.18.0"
   },
   "scripts": {
-    "postinstall": "npm run cert",
     "pbiviz": "pbiviz",
     "start": "pbiviz start",
     "package": "pbiviz package",
     "lint": "tslint -c tslint.json -p tsconfig.json",
     "test": "pbiviz package --resources --no-minify --no-pbiviz",
-    "cert": "pbiviz --install-cert"
+    "cert": "pbiviz install-cert"
   }
 }
