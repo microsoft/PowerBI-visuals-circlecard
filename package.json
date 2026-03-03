@@ -1,5 +1,10 @@
 {
-  "name": "visual",
+  "name": "circle-card",
+  "version": "1.0.1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/microsoft/PowerBI-visuals-circlecard"
+  },
   "dependencies": {
     "d3": "5.11.0",
     "powerbi-visuals-utils-dataviewutils": "2.2.1",
