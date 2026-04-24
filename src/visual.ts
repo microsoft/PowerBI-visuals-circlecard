@@ -116,7 +116,7 @@ export class Visual implements IVisual {
             this.events.renderingFinished(options);
         }
         catch (error) {
-            this.events.renderingFailed(options);
+            this.events.renderingFailed(options, String(error));
             throw error;
         }
     }
